@@ -2,7 +2,7 @@
 
 A production-ready Next.js + TypeScript dashboard demonstrating scalable frontend architecture for data-heavy SaaS products. Every structural decision is intentional and documented below.
 
-**[Live demo →](https://mosaic-demo.vercel.app)**
+**[Live demo →](https://mosaic-demo-dashboard.vercel.app)**
 
 ![Dashboard preview](docs/preview.png)
 
@@ -14,18 +14,18 @@ A production-ready Next.js + TypeScript dashboard demonstrating scalable fronten
 
 Four screens, each demonstrating a different architecture pattern:
 
-| Screen | What it demonstrates |
-|---|---|
-| **Overview** | KPI cards, revenue chart, user growth chart, skeleton loading states |
-| **Users table** | Sortable/filterable table, column visibility, pagination, CSV export |
-| **User detail** | Dynamic routing, activity timeline, co-located data fetching |
-| **Settings** | Form architecture with validation, Zod schema as single source of truth |
+| Screen          | What it demonstrates                                                    |
+| --------------- | ----------------------------------------------------------------------- |
+| **Overview**    | KPI cards, revenue chart, user growth chart, skeleton loading states    |
+| **Users table** | Sortable/filterable table, column visibility, pagination, CSV export    |
+| **User detail** | Dynamic routing, activity timeline, co-located data fetching            |
+| **Settings**    | Form architecture with validation, Zod schema as single source of truth |
 
 ---
 
 ## Architecture decisions
 
-This section explains the *why* behind the structure — not what was built, but the reasoning behind each choice. If you're evaluating this codebase, this is the part worth reading.
+This section explains the _why_ behind the structure — not what was built, but the reasoning behind each choice. If you're evaluating this codebase, this is the part worth reading.
 
 ### 1. Feature-based folder structure, not layer-based
 
@@ -79,7 +79,7 @@ src/shared/
 
 ### 2. React Query for server state — not Redux
 
-Redux is the right tool for complex client-side state: multi-step forms, optimistic updates, real-time sync across disconnected components. For most SaaS dashboards, 80% of "state" is really just *server data with loading and error states*. Redux is overkill for that.
+Redux is the right tool for complex client-side state: multi-step forms, optimistic updates, real-time sync across disconnected components. For most SaaS dashboards, 80% of "state" is really just _server data with loading and error states_. Redux is overkill for that.
 
 React Query handles server state better:
 
@@ -96,7 +96,7 @@ The remaining client state (UI state, active filters, selected table rows) lives
 
 TypeScript gives compile-time safety. The moment data crosses the network, you're back to `any`. Zod gives you runtime validation at that boundary.
 
-Every API response in this codebase is validated against a Zod schema before it reaches the UI. The TypeScript types are then *derived* from the schema:
+Every API response in this codebase is validated against a Zod schema before it reaches the UI. The TypeScript types are then _derived_ from the schema:
 
 ```typescript
 // Define once
@@ -107,13 +107,13 @@ const UserSchema = z.object({
   plan: z.enum(["starter", "pro", "enterprise"]),
   status: z.enum(["active", "inactive", "pending"]),
   mrr: z.number(),
-})
+});
 
 // Type is inferred — no duplication
-type User = z.infer<typeof UserSchema>
+type User = z.infer<typeof UserSchema>;
 ```
 
-The same schema validates the API response *and* the settings form. The API contract and the form contract cannot drift apart.
+The same schema validates the API response _and_ the settings form. The API contract and the form contract cannot drift apart.
 
 ---
 
@@ -134,7 +134,7 @@ TanStack Table is headless: it gives you state and logic, you provide the markup
 - `next/image` everywhere (automatic WebP, lazy loading, no layout shift)
 - Heavy chart components loaded with `dynamic(() => import(...), { ssr: false })` — not in the initial bundle
 - Skeleton loading states instead of spinners — better perceived performance for data-heavy views
-- `React.memo` applied *after profiling*, not preemptively — premature memoisation adds complexity without measurable benefit
+- `React.memo` applied _after profiling_, not preemptively — premature memoisation adds complexity without measurable benefit
 
 **Lighthouse score: 97 Performance / 100 Accessibility / 100 Best Practices / 100 SEO**
 
@@ -257,15 +257,15 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Tech stack rationale
 
-| Tool | Alternative considered | Why this one |
-|---|---|---|
-| Next.js 14 (App Router) | Vite + React | Server components reduce client bundle; route-based code splitting is free |
-| TanStack Query | Redux Toolkit Query | Simpler mental model; better DX for pure server-state use cases |
-| TanStack Table | AG Grid, React Table v7 | Headless — no style conflicts; fully typed |
-| Zod | Yup, io-ts | Best TypeScript inference; works for both API validation and form schemas |
-| Recharts | Chart.js, Nivo | React-native API; easy to compose custom chart shapes |
-| React Hook Form | Formik | No controlled inputs — far fewer re-renders on keystroke |
-| Tailwind CSS | CSS Modules, styled-components | Co-located styles eliminate dead CSS; consistent design tokens |
+| Tool                    | Alternative considered         | Why this one                                                               |
+| ----------------------- | ------------------------------ | -------------------------------------------------------------------------- |
+| Next.js 14 (App Router) | Vite + React                   | Server components reduce client bundle; route-based code splitting is free |
+| TanStack Query          | Redux Toolkit Query            | Simpler mental model; better DX for pure server-state use cases            |
+| TanStack Table          | AG Grid, React Table v7        | Headless — no style conflicts; fully typed                                 |
+| Zod                     | Yup, io-ts                     | Best TypeScript inference; works for both API validation and form schemas  |
+| Recharts                | Chart.js, Nivo                 | React-native API; easy to compose custom chart shapes                      |
+| React Hook Form         | Formik                         | No controlled inputs — far fewer re-renders on keystroke                   |
+| Tailwind CSS            | CSS Modules, styled-components | Co-located styles eliminate dead CSS; consistent design tokens             |
 
 ---
 
@@ -275,4 +275,4 @@ MIT — use this however you like.
 
 ---
 
-*Built by [Safiullah Hamidi](https://www.linkedin.com/in/your-profile) · Senior Frontend Engineer · [Upwork profile](https://www.upwork.com/freelancers/~012a7b3015a184f996)*
+_Built by [Safiullah Hamidi](https://www.linkedin.com/in/your-profile) · Senior Frontend Engineer · [Upwork profile](https://www.upwork.com/freelancers/~012a7b3015a184f996)_
